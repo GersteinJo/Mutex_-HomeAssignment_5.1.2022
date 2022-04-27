@@ -65,7 +65,7 @@ int main()
 
     for(int i = 0; i<= 10000; i++) global_queue.push(i);
     std::thread other(push_nums_in_range, 0,10000);
-    for(int i = 0; i<= 15000; i++) global_queue.pop();
+    for(int i = 0; i<= 20000; i++) global_queue.pop();
     other.join();
     std::cout<<global_queue.size()<<"\n";
 }
