@@ -19,11 +19,12 @@ public:
         queue_s.push(elem);
     }
 
-//    template<class Arg, class ... Args>
-//    void emplace(const Arg& fst_arg, const Args&... rest_args)
-//    {
-//        queue_s.emplace(fst_arg, rest_args);
-//    };
+    template<class Arg, class ... Args>
+    void emplace(const Arg& fst_arg, const Args&... rest_args)
+    {
+        queue_s.emplace(fst_arg, rest_args...);
+    };
+
     void pop()
     {
         std::lock_guard lock_queue(queue_mutex);
@@ -44,6 +45,11 @@ public:
         std::lock_guard lock_queue(queue_mutex);
         return queue_s.back();
     }
+    size_t size()
+    {
+        std::lock_guard lock_queue(queue_mutex);
+        return queue_s.size();
+    }
 };
 
 
@@ -56,10 +62,10 @@ void push_nums_in_range(int first, int last)
 
 int main()
 {
-    std::thread other(push_nums_in_range, 1,10);
-    push_nums_in_range(11,20);
+
+    for(int i = 0; i<= 10000; i++) global_queue.push(i);
+    std::thread other(push_nums_in_range, 0,10000);
+    for(int i = 0; i<= 15000; i++) global_queue.pop();
     other.join();
-    int front = global_queue.front();
-    int back = global_queue.back();
-    std::cout<<front<<" "<<back<<"\n";
+    std::cout<<global_queue.size()<<"\n";
 }
